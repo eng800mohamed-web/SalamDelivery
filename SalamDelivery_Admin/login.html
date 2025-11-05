@@ -81,63 +81,71 @@
     <p class="small-text">Forgot password? <a href="#" onclick="resetPassword();return false;">Reset here</a></p>
   </div>
 
-  <!-- Supabase UMD -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script>
-    // إعداد Supabase
+  <!-- نستخدم ES Modules ونربط الدوال على window -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
     const SUPABASE_URL = "https://nfmaqndlsbizkafzhigd.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mbWFxbmRsc2JpemthZnpoaWdkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMzU5NjUsImV4cCI6MjA3NzkxMTk2NX0.ILsyiRbVNlOjwFV3f4Yt5-RROBA2gwQ0J-oMPFlRRDc";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // اجعل الأدمن فقط هذا الإيميل
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
     const ADMIN_EMAIL = "eng800mohamed@gmail.com";
 
-    async function login(){
+    console.log("Salam Admin login JS loaded");
+
+    window.login = async function () {
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
 
-      if(!email || !password){
+      if (!email || !password) {
         alert("Please enter email and password");
         return;
       }
 
-      // تسجيل الدخول عبر Supabase
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+          console.error("Supabase error:", error);
+          alert("Login failed: " + error.message);
+          return;
+        }
 
-      if(error){
-        alert("Login failed: " + error.message);
-        return;
+        if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+          alert("This account is not allowed as ADMIN.");
+          await supabase.auth.signOut();
+          return;
+        }
+
+        alert("Welcome admin!");
+        window.location.href = "dashboard.html";
+      } catch (e) {
+        console.error(e);
+        alert("Unexpected error: " + e.message);
       }
+    };
 
-      // تأكد أنه إيميل الأدمن فقط
-      if(email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()){
-        alert("This account is not allowed as ADMIN.");
-        await supabase.auth.signOut();
-        return;
-      }
-
-      alert("Welcome admin!");
-      window.location.href = "dashboard.html";
-    }
-
-    function togglePassword(){
+    window.togglePassword = function () {
       const pass = document.getElementById("password");
       pass.type = pass.type === "password" ? "text" : "password";
-    }
+    };
 
-    async function resetPassword(){
+    window.resetPassword = async function () {
       const email = document.getElementById("email").value.trim();
-      if(!email){
+      if (!email) {
         alert("Enter your email first to send reset link.");
         return;
       }
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
-      if(error){
-        alert("Failed to send reset email: " + error.message);
-      }else{
-        alert("Reset email sent. Check your inbox.");
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(email);
+        if (error) {
+          alert("Failed to send reset email: " + error.message);
+        } else {
+          alert("Reset email sent. Check your inbox.");
+        }
+      } catch (e) {
+        alert("Unexpected error: " + e.message);
       }
-    }
+    };
   </script>
 </body>
 </html>
