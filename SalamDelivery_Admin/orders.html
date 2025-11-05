@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>Salam Delivery | Orders</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Poppins',sans-serif;background:#f5f5f5;color:#000;}
+    .sidebar{
+      position:fixed;left:0;top:0;bottom:0;width:220px;
+      background:#000;color:#FFD600;padding-top:15px;
+    }
+    .sidebar .logo{
+      display:flex;align-items:center;gap:10px;
+      padding:0 15px 10px;
+    }
+    .sidebar .logo-icon{
+      width:34px;height:34px;border-radius:10px;
+      background:#FFD600;color:#000;font-weight:700;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .sidebar .logo span{font-weight:700;font-size:15px;}
+    .sidebar ul{list-style:none;margin-top:15px;}
+    .sidebar li{
+      padding:10px 18px;display:flex;align-items:center;gap:10px;
+      cursor:pointer;font-size:13px;border-radius:8px;margin:4px 10px;
+    }
+    .sidebar li i{font-size:18px;}
+    .sidebar li.active,.sidebar li:hover{background:#FFD600;color:#000;}
+    .header{
+      position:fixed;left:220px;right:0;top:0;height:60px;
+      background:#111;color:#FFD600;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 18px;z-index:5;
+    }
+    .header-right{display:flex;align-items:center;gap:10px;}
+    .header-right button{
+      border:none;padding:6px 10px;border-radius:999px;
+      background:#FFD600;color:#000;font-size:12px;cursor:pointer;
+    }
+    .header-right .avatar{
+      width:30px;height:30px;border-radius:50%;background:#FFD600;
+      display:flex;align-items:center;justify-content:center;
+      color:#000;font-weight:700;font-size:14px;
+    }
+    .header-right .logout{
+      background:#000;color:#FFD600;border:1px solid #FFD600;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .main{margin-left:220px;padding:80px 25px 30px 25px;}
+    h1{font-size:20px;margin-bottom:10px;}
+    .filters{margin-bottom:10px;display:flex;gap:10px;flex-wrap:wrap;}
+    select,button{
+      padding:7px 10px;border-radius:6px;border:1px solid #ccc;font-size:13px;
+    }
+    button.action{background:#FFD600;color:#000;border:none;cursor:pointer;}
+    .table-card{
+      background:#fff;border-radius:12px;padding:15px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.15);
+    }
+    table{width:100%;border-collapse:collapse;font-size:13px;}
+    th,td{padding:8px;border-bottom:1px solid #eee;text-align:left;}
+    .badge{padding:2px 6px;border-radius:999px;font-size:11px;}
+    .badge-pending{background:#FFD600;color:#000;}
+    .badge-transit{background:#000;color:#FFD600;}
+    .badge-done{background:#c8e6c9;color:#1b5e20;}
+    .toast{
+      position:fixed;bottom:20px;right:20px;background:#222;
+      color:#fff;padding:8px 14px;border-radius:999px;
+      display:flex;align-items:center;gap:8px;font-size:13px;
+      opacity:0;transform:translateY(10px);pointer-events:none;
+      transition:opacity .2s,transform .2s;z-index:50;
+    }
+    .toast.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+    .toast i{font-size:18px;}
+  </style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">S</div>
+    <span>Salam Delivery</span>
+  </div>
+  <ul>
+    <li onclick="go('dashboard.html')"><i class="bx bxs-dashboard"></i><span>Dashboard</span></li>
+    <li class="active"><i class="bx bx-package"></i><span>Orders</span></li>
+    <li onclick="go('drivers.html')"><i class="bx bx-car"></i><span>Drivers</span></li>
+    <li onclick="go('vendors.html')"><i class="bx bx-store-alt"></i><span>Vendors</span></li>
+    <li onclick="go('payments.html')"><i class="bx bx-wallet"></i><span>Payments</span></li>
+    <li onclick="go('settings.html')"><i class="bx bx-cog"></i><span>Settings</span></li>
+  </ul>
+</div>
+
+<div class="header">
+  <div></div>
+  <div class="header-right">
+    <button id="langBtn" onclick="toggleLang()">AR</button>
+    <div class="avatar">AD</div>
+    <button class="logout" onclick="logout()"><i class="bx bx-log-out"></i></button>
+  </div>
+</div>
+
+<div class="main">
+  <h1 data-en="Orders Management" data-ar="إدارة الطلبات">Orders Management</h1>
+  <div class="filters">
+    <select id="statusFilter">
+      <option value="">All statuses</option>
+      <option value="Pending">Pending</option>
+      <option value="Preparing">Preparing</option>
+      <option value="In Transit">In Transit</option>
+      <option value="Delivered">Delivered</option>
+      <option value="Cancelled">Cancelled</option>
+    </select>
+    <button class="action" onclick="loadOrders()">Refresh</button>
+  </div>
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Pickup</th>
+          <th>Dropoff</th>
+          <th>Status</th>
+          <th>Total</th>
+          <th>Change</th>
+        </tr>
+      </thead>
+      <tbody id="ordersBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="toast" class="toast">
+  <i class="bx bx-info-circle"></i><span id="toastMsg"></span>
+</div>
+
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+  const supabaseUrl = "https://nfmaqndlsbizkafzhigd.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mbWFxbmRsc2JpemthZnpoaWdkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMzU5NjUsImV4cCI6MjA3NzkxMTk2NX0.ILsyiRbVNlOjwFV3f4Yt5-RROBA2gwQ0J-oMPFlRRDc";
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  const toast = document.getElementById("toast");
+  const toastMsg = document.getElementById("toastMsg");
+  function showToast(msg,type="info"){
+    toastMsg.textContent = msg;
+    toast.style.background = type==="error" ? "#b71c1c" : "#2e7d32";
+    toast.classList.add("show");
+    setTimeout(()=>toast.classList.remove("show"),3000);
+  }
+
+  function go(page){ window.location.href = page; }
+
+  async function logout(){
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  }
+
+  function toggleLang(){
+    const html = document.documentElement;
+    const dir = html.getAttribute("dir") === "rtl" ? "ltr" : "rtl";
+    html.setAttribute("dir", dir);
+    document.body.style.direction = dir;
+    const langBtn = document.getElementById("langBtn");
+    if(langBtn) langBtn.textContent = dir === "rtl" ? "EN" : "AR";
+    document.querySelectorAll("[data-en]").forEach(el=>{
+      const en = el.getAttribute("data-en");
+      const ar = el.getAttribute("data-ar") || en;
+      el.textContent = dir === "rtl" ? ar : en;
+    });
+  }
+
+  function badgeClass(status){
+    if(status==="Pending") return "badge badge-pending";
+    if(status==="In Transit" || status==="Preparing") return "badge badge-transit";
+    if(status==="Delivered") return "badge badge-done";
+    return "badge";
+  }
+
+  async function loadOrders(){
+    const status = document.getElementById("statusFilter").value;
+    let query = supabase.from("orders").select("*").order("created_at",{ascending:false});
+    if(status) query = query.eq("status",status);
+    const { data, error } = await query;
+    const tbody = document.getElementById("ordersBody");
+    if(error){ tbody.innerHTML = "<tr><td colspan='6'>Error loading orders</td></tr>"; return; }
+    if(!data.length){ tbody.innerHTML = "<tr><td colspan='6'>No orders</td></tr>"; return; }
+    tbody.innerHTML = "";
+    data.forEach((o,idx)=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = \`
+        <td>\${idx+1}</td>
+        <td>\${o.pickup_address || "-"}</td>
+        <td>\${o.dropoff_address || "-"}</td>
+        <td><span class="\${badgeClass(o.status)}">\${o.status}</span></td>
+        <td>AED \${(o.total_price||0).toFixed(2)}</td>
+        <td>
+          <select onchange="updateStatus('\${o.id}',this.value)">
+            <option value="">Change…</option>
+            <option value="Pending">Pending</option>
+            <option value="Preparing">Preparing</option>
+            <option value="In Transit">In Transit</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </td>
+      \`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  window.updateStatus = async (id,newStatus)=>{
+    if(!newStatus) return;
+    const { error } = await supabase.from("orders").update({status:newStatus}).eq("id",id);
+    if(error){ showToast("Failed to update","error");return;}
+    showToast("Status updated");
+    loadOrders();
+  };
+
+  loadOrders();
+</script>
+</body>
+</html>
+
