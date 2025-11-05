@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>Salam Delivery | Order Food & More</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:#f5f5f5;
+      color:#000;
+    }
+    a{text-decoration:none;color:inherit;}
+
+    /* Header */
+    header{
+      background:#000;
+      color:#FFD600;
+      padding:10px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+    .brand{
+      display:flex;align-items:center;gap:10px;
+    }
+    .brand-logo{
+      width:34px;height:34px;border-radius:10px;
+      background:#FFD600;color:#000;font-weight:700;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .brand-text{font-weight:700;font-size:16px;}
+    .header-right{
+      display:flex;align-items:center;gap:10px;
+      font-size:13px;
+    }
+    .lang-btn{
+      border-radius:999px;
+      border:1px solid #FFD600;
+      padding:4px 10px;
+      cursor:pointer;
+      background:#000;
+      color:#FFD600;
+      font-size:12px;
+    }
+    .small-link{
+      color:#FFD600;
+      font-size:12px;
+      text-decoration:underline;
+      cursor:pointer;
+    }
+
+    /* Hero */
+    .hero{
+      background:linear-gradient(135deg,#000 40%,#FFD600 100%);
+      color:#fff;
+      padding:24px 18px 18px;
+    }
+    .hero-inner{
+      max-width:900px;margin:0 auto;
+      display:flex;flex-wrap:wrap;align-items:center;gap:20px;
+    }
+    .hero-text{flex:1 1 260px;}
+    .hero-title{
+      font-size:26px;font-weight:700;margin-bottom:8px;
+    }
+    .hero-sub{font-size:13px;color:#f0f0f0;margin-bottom:12px;}
+    .hero-tags{font-size:12px;color:#fff;margin-bottom:10px;}
+    .hero-tags span{
+      display:inline-block;margin-right:6px;margin-bottom:4px;
+      padding:3px 8px;border-radius:999px;
+      background:rgba(0,0,0,0.35);border:1px solid rgba(255,214,0,0.6);
+    }
+    .hero-cta{
+      display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;
+    }
+    .hero-cta button{
+      padding:8px 14px;border-radius:999px;
+      border:none;cursor:pointer;
+      font-size:13px;font-weight:600;
+    }
+    .btn-primary{
+      background:#FFD600;color:#000;
+    }
+    .btn-outline{
+      background:transparent;color:#FFD600;
+      border:1px solid #FFD600;
+    }
+    .hero-img{
+      flex:1 1 220px;
+      display:flex;justify-content:center;align-items:center;
+    }
+    .hero-img-inner{
+      width:180px;height:180px;border-radius:50%;
+      background:radial-gradient(circle at 30% 30%,#FFD600 0,#000 60%);
+      display:flex;align-items:center;justify-content:center;
+      position:relative;overflow:hidden;
+      box-shadow:0 5px 25px rgba(0,0,0,0.6);
+    }
+    .hero-img-inner i{
+      font-size:80px;color:#FFD600;
+    }
+    .hero-badge{
+      position:absolute;
+      bottom:16px;right:12px;
+      background:#FFD600;color:#000;
+      border-radius:999px;
+      font-size:11px;
+      padding:4px 8px;font-weight:600;
+      display:flex;align-items:center;gap:4px;
+    }
+
+    /* Layout */
+    .page{
+      max-width:1100px;
+      margin:0 auto;
+      padding:18px;
+    }
+
+    .section-title{
+      font-size:18px;font-weight:600;margin-bottom:6px;
+    }
+    .section-sub{
+      font-size:12px;color:#666;margin-bottom:12px;
+    }
+
+    /* Search bar */
+    .search-bar{
+      display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;
+    }
+    .search-bar input, .search-bar select{
+      flex:1 1 160px;
+      padding:8px 10px;border-radius:8px;border:1px solid #ccc;
+      font-size:13px;
+    }
+    .search-bar button{
+      padding:8px 14px;border-radius:8px;border:none;
+      background:#FFD600;color:#000;font-size:13px;font-weight:600;
+      cursor:pointer;
+    }
+
+    /* Vendors grid */
+    .vendors-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+      gap:14px;
+      margin-bottom:24px;
+    }
+    .vendor-card{
+      background:#fff;border-radius:12px;
+      overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,0.15);
+      display:flex;flex-direction:column;
+    }
+    .vendor-img{
+      height:130px;background:#ddd;position:relative;overflow:hidden;
+    }
+    .vendor-img img{
+      width:100%;height:100%;object-fit:cover;
+    }
+    .vendor-img-badge{
+      position:absolute;bottom:8px;left:8px;
+      background:rgba(0,0,0,0.75);color:#FFD600;
+      padding:3px 7px;border-radius:999px;font-size:11px;
+    }
+    .vendor-body{
+      padding:10px 12px;flex:1;
+    }
+    .vendor-name{font-size:15px;font-weight:600;margin-bottom:3px;}
+    .vendor-meta{font-size:11px;color:#777;margin-bottom:4px;}
+    .vendor-tags{
+      font-size:11px;margin-bottom:6px;
+    }
+    .vendor-tags span{
+      display:inline-block;margin-right:4px;margin-bottom:3px;
+      padding:2px 6px;border-radius:999px;
+      background:#000;color:#FFD600;
+    }
+    .vendor-footer{
+      padding:8px 12px 10px;
+      display:flex;justify-content:space-between;align-items:center;
+      border-top:1px solid #eee;
+    }
+    .rating{
+      font-size:11px;color:#555;display:flex;align-items:center;gap:3px;
+    }
+    .rating i{color:#FFD600;}
+    .vendor-footer button{
+      padding:6px 10px;border-radius:999px;
+      border:none;background:#FFD600;color:#000;
+      font-size:12px;font-weight:600;cursor:pointer;
+    }
+
+    /* Order form panel */
+    .order-panel{
+      background:#fff;border-radius:14px;
+      padding:14px 14px 16px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.18);
+      margin-bottom:24px;
+    }
+    .order-header{
+      display:flex;justify-content:space-between;align-items:center;
+      margin-bottom:8px;
+    }
+    .order-header h3{
+      font-size:15px;font-weight:600;
+    }
+    .order-header small{
+      font-size:11px;color:#777;
+    }
+    .order-form label{
+      display:block;font-size:12px;margin:6px 0 2px;
+    }
+    .order-form input,.order-form textarea{
+      width:100%;padding:8px 9px;border-radius:8px;
+      border:1px solid #ccc;font-size:13px;
+    }
+    .order-form textarea{min-height:60px;resize:vertical;}
+    .order-row{
+      display:flex;gap:10px;flex-wrap:wrap;
+    }
+    .order-row > div{flex:1 1 140px;}
+    .order-actions{
+      margin-top:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
+    }
+    .order-actions button{
+      padding:9px 12px;border-radius:999px;border:none;font-size:13px;font-weight:600;cursor:pointer;
+    }
+    .btn-secondary{
+      background:#000;color:#FFD600;border:1px solid #FFD600;
+    }
+    .order-msg{
+      font-size:12px;
+    }
+    .order-msg.ok{color:#2e7d32;}
+    .order-msg.err{color:#c62828;}
+
+    /* Responsive */
+    @media(max-width:600px){
+      .hero-inner{flex-direction:column;}
+      .hero-img-inner{width:150px;height:150px;}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="brand-logo">S</div>
+    <div class="brand-text" data-en="Salam Delivery" data-ar="سلام دليفري">Salam Delivery</div>
+  </div>
+  <div class="header-right">
+    <button id="langBtn" class="lang-btn" onclick="toggleLang()">AR</button>
+    <span class="small-link" onclick="openDriver()">Driver App</span>
+    <span class="small-link" onclick="openAdmin()">Admin</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-title" data-en="Delivering food, groceries & more in minutes." data-ar="نوصل لك الأكل والطلبات في دقائق.">
+        Delivering food, groceries & more in minutes.
+      </div>
+      <div class="hero-sub" data-en="Choose your favorite restaurant or shop, add your address, and Salam drivers will handle the rest."
+           data-ar="اختر مطعمك أو متجرك المفضل، أدخل عنوانك، وسائقين سلام يهتمون بالباقي.">
+        Choose your favorite restaurant or shop, add your address, and Salam drivers will handle the rest.
+      </div>
+      <div class="hero-tags">
+        <span data-en="Food" data-ar="طعام">Food</span>
+        <span data-en="Groceries" data-ar="بقالة">Groceries</span>
+        <span data-en="Pharmacy" data-ar="صيدلية">Pharmacy</span>
+        <span data-en="Documents" data-ar="مستندات">Documents</span>
+      </div>
+      <div class="hero-cta">
+        <button class="btn-primary" onclick="scrollToVendors()" data-en="Start order" data-ar="ابدأ طلبك">Start order</button>
+        <button class="btn-outline" onclick="scrollToForm()" data-en="Quick delivery" data-ar="توصيل سريع">Quick delivery</button>
+      </div>
+    </div>
+    <div class="hero-img">
+      <div class="hero-img-inner">
+        <i class='bx bx-bike'></i>
+        <div class="hero-badge">
+          <i class='bx bx-time-five'></i>
+          <span data-en="~30 min avg" data-ar="متوسط 30 دقيقة">~30 min avg</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page">
+  <!-- Vendors section -->
+  <section id="vendorsSection">
+    <h2 class="section-title" data-en="Popular restaurants & shops" data-ar="أفضل المطاعم والمتاجر">Popular restaurants & shops</h2>
+    <p class="section-sub" data-en="Browse partners and order directly from Salam app."
+       data-ar="تصفح شركاء سلام واطلب مباشرة من الصفحة.">
+      Browse partners and order directly from Salam app.
+    </p>
+
+    <div class="search-bar">
+      <input id="searchInput" placeholder="Search by name or cuisine…" />
+      <select id="filterCity">
+        <option value="">{{City}}</option>
+        <option value="Dubai">Dubai</option>
+        <option value="Abu Dhabi">Abu Dhabi</option>
+        <option value="Sharjah">Sharjah</option>
+      </select>
+      <button onclick="loadVendors()">Search</button>
+    </div>
+
+    <div id="vendorsGrid" class="vendors-grid">
+      <!-- Vendors loaded from Supabase -->
+    </div>
+  </section>
+
+  <!-- Order form panel -->
+  <section id="orderSection">
+    <div class="order-panel">
+      <div class="order-header">
+        <div>
+          <h3 id="orderVendorTitle" data-en="Quick custom delivery" data-ar="طلب توصيل سريع">
+            Quick custom delivery
+          </h3>
+          <small id="orderVendorSubtitle" data-en="Fill in your details and we’ll assign the nearest driver."
+                  data-ar="املأ بياناتك وسنرسل أقرب سائق.">
+            Fill in your details and we’ll assign the nearest driver.
+          </small>
+        </div>
+        <i class='bx bx-package'></i>
+      </div>
+
+      <form class="order-form" onsubmit="placeOrder(event)">
+        <input type="hidden" id="selected_vendor_id">
+        <input type="hidden" id="selected_vendor_name">
+
+        <label data-en="Your name" data-ar="الاسم">Your name</label>
+        <input id="customer_name" placeholder="Your name" />
+
+        <label data-en="Phone (WhatsApp)" data-ar="رقم الجوال (واتساب)">Phone (WhatsApp)</label>
+        <input id="customer_phone" placeholder="+971…" />
+
+        <label data-en="Pickup address / Restaurant" data-ar="عنوان الاستلام / المطعم">Pickup address / Restaurant</label>
+        <input id="pickup_address" placeholder="Restaurant or shop address" />
+
+        <label data-en="Delivery address" data-ar="عنوان التوصيل">Delivery address</label>
+        <input id="dropoff_address" placeholder="Building, street, flat number…" />
+
+        <div class="order-row">
+          <div>
+            <label data-en="Order amount (AED)" data-ar="قيمة الطلب (درهم)">Order amount (AED)</label>
+            <input id="total_price" type="number" step="0.01" placeholder="Example: 45" />
+          </div>
+          <div>
+            <label data-en="Promo code (optional)" data-ar="كود خصم (اختياري)">Promo code (optional)</label>
+            <input id="promo_code" placeholder="Optional" />
+          </div>
+        </div>
+
+        <label data-en="Order details / Notes" data-ar="تفاصيل الطلب / ملاحظات">Order details / Notes</label>
+        <textarea id="notes" placeholder="Food items, entrance instructions, etc."></textarea>
+
+        <div class="order-actions">
+          <button type="submit" class="btn-primary" data-en="Confirm order" data-ar="تأكيد الطلب">Confirm order</button>
+          <button type="button" class="btn-secondary" onclick="clearForm()" data-en="Clear form" data-ar="مسح البيانات">Clear form</button>
+          <div id="orderMessage" class="order-msg"></div>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>
+
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+  const supabaseUrl = "https://nfmaqndlsbizkafzhigd.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mbWFxbmRsc2JpemthZnpoaWdkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMzU5NjUsImV4cCI6MjA3NzkxMTk2NX0.ILsyiRbVNlOjwFV3f4Yt5-RROBA2gwQ0J-oMPFlRRDc";
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  const vendorsGrid = document.getElementById("vendorsGrid");
+  const orderMessage = document.getElementById("orderMessage");
+
+  let currentLang = "en";
+
+  // ===================== Vendors =====================
+  async function loadVendors(){
+    vendorsGrid.innerHTML = "<p>Loading vendors…</p>";
+    const search = document.getElementById("searchInput").value.trim();
+    const city = document.getElementById("filterCity").value;
+
+    let query = supabase.from("vendors").select("*").limit(30);
+    if(city){ query = query.eq("city", city); }
+    if(search){
+      // نحاول البحث بالاسم أو التصنيف
+      query = query.ilike("name", "%" + search + "%");
+    }
+
+    const { data, error } = await query;
+    if(error){
+      console.error(error);
+      vendorsGrid.innerHTML = "<p>Error loading vendors.</p>";
+      return;
+    }
+    if(!data || !data.length){
+      vendorsGrid.innerHTML = "<p>No vendors found. Add some rows in the 'vendors' table in Supabase.</p>";
+      return;
+    }
+
+    vendorsGrid.innerHTML = "";
+    data.forEach(v=>{
+      const card = document.createElement("div");
+      card.className = "vendor-card";
+
+      const imgUrl = v.image_url || "https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?auto=compress&cs=tinysrgb&w=800";
+      const category = v.category || "Restaurant";
+      const cityName = v.city || "";
+      const time = v.eta_minutes || 30;
+      const minOrder = v.min_order || 0;
+      const rating = v.rating || 4.8;
+
+      card.innerHTML = `
+        <div class="vendor-img">
+          <img src="${imgUrl}" alt="${v.name || "Vendor"}" loading="lazy">
+          <div class="vendor-img-badge"><i class='bx bx-time-five'></i> ~${time} min</div>
+        </div>
+        <div class="vendor-body">
+          <div class="vendor-name">${v.name || "Vendor"}</div>
+          <div class="vendor-meta">${category} • ${cityName}</div>
+          <div class="vendor-tags">
+            <span>${minOrder ? "Min " + minOrder + " AED" : "No min"}</span>
+          </div>
+        </div>
+        <div class="vendor-footer">
+          <div class="rating">
+            <i class='bx bxs-star'></i> <span>${rating.toFixed ? rating.toFixed(1) : rating}</span>
+          </div>
+          <button onclick="orderFromVendor('${v.id}','${(v.name || "").replace(/'/g,"\\'")}','${(v.pickup_address || "").replace(/'/g,"\\'")}')">
+            Order
+          </button>
+        </div>
+      `;
+      vendorsGrid.appendChild(card);
+    });
+  }
+
+  // Expose to window for inline onclick
+  window.orderFromVendor = function(id,name,pickup){
+    document.getElementById("selected_vendor_id").value = id;
+    document.getElementById("selected_vendor_name").value = name || "";
+    document.getElementById("pickup_address").value = pickup || name || "";
+    document.getElementById("orderVendorTitle").textContent =
+      currentLang === "ar" ? "طلب من " + (name || "المطعم") : "Order from " + (name || "restaurant");
+    document.getElementById("orderVendorSubtitle").textContent =
+      currentLang === "ar"
+        ? "تم اختيار المطعم، أكمل بياناتك وسيتم إرسال سائق."
+        : "Restaurant selected. Complete your details and we’ll send a driver.";
+    scrollToForm();
+  };
+
+  // ===================== Order form =====================
+  window.placeOrder = async function(e){
+    e.preventDefault();
+    orderMessage.textContent = "";
+    orderMessage.className = "order-msg";
+
+    const vendor_id       = document.getElementById("selected_vendor_id").value || null;
+    const vendor_name     = document.getElementById("selected_vendor_name").value || "";
+    const customer_name   = document.getElementById("customer_name").value.trim();
+    const customer_phone  = document.getElementById("customer_phone").value.trim();
+    const pickup_address  = document.getElementById("pickup_address").value.trim();
+    const dropoff_address = document.getElementById("dropoff_address").value.trim();
+    const total_price_raw = document.getElementById("total_price").value.trim();
+    const notes           = document.getElementById("notes").value.trim();
+    const promo_code      = document.getElementById("promo_code").value.trim();
+
+    if(!customer_name || !customer_phone || !pickup_address || !dropoff_address){
+      orderMessage.textContent = currentLang === "ar"
+        ? "الرجاء تعبئة الاسم والجوال وعناوين الاستلام والتسليم."
+        : "Please fill in name, phone, pickup and delivery addresses.";
+      orderMessage.classList.add("err");
+      return;
+    }
+
+    const total_price = total_price_raw ? parseFloat(total_price_raw) : 0;
+
+    const { error } = await supabase.from("orders").insert([
+      {
+        vendor_id,
+        vendor_name,
+        customer_name,
+        customer_phone,
+        pickup_address,
+        dropoff_address,
+        total_price: isNaN(total_price) ? 0 : total_price,
+        notes,
+        promo_code,
+        status: "Pending",
+        driver_id: null
+      }
+    ]);
+
+    if(error){
+      console.error(error);
+      orderMessage.textContent = (currentLang === "ar"
+        ? "حدث خطأ أثناء إرسال الطلب: "
+        : "Error sending order: ") + error.message;
+      orderMessage.classList.add("err");
+    }else{
+      orderMessage.textContent = currentLang === "ar"
+        ? "تم استلام طلبك بنجاح ✅ سيتم التواصل معك قريباً."
+        : "Your order has been received ✅ We’ll contact you shortly.";
+      orderMessage.classList.add("ok");
+      clearForm();
+    }
+  };
+
+  window.clearForm = function(){
+    document.getElementById("customer_name").value = "";
+    document.getElementById("customer_phone").value = "";
+    document.getElementById("pickup_address").value = "";
+    document.getElementById("dropoff_address").value = "";
+    document.getElementById("total_price").value = "";
+    document.getElementById("promo_code").value = "";
+    document.getElementById("notes").value = "";
+  };
+
+  // ===================== Helpers =====================
+  window.scrollToVendors = function(){
+    document.getElementById("vendorsSection").scrollIntoView({behavior:"smooth"});
+  };
+  window.scrollToForm = function(){
+    document.getElementById("orderSection").scrollIntoView({behavior:"smooth"});
+  };
+
+  window.openDriver = function(){
+    window.location.href = "../SalamDelivery_Driver/login.html";
+  };
+  window.openAdmin = function(){
+    window.location.href = "../SalamDelivery_Admin/login.html";
+  };
+
+  window.toggleLang = function(){
+    const html = document.documentElement;
+    const newDir = html.getAttribute("dir") === "rtl" ? "ltr" : "rtl";
+    currentLang = newDir === "rtl" ? "ar" : "en";
+    html.setAttribute("dir", newDir);
+    document.body.style.direction = newDir;
+    const btn = document.getElementById("langBtn");
+    if(btn) btn.textContent = newDir === "rtl" ? "EN" : "AR";
+
+    document.querySelectorAll("[data-en]").forEach(el=>{
+      const en = el.getAttribute("data-en");
+      const ar = el.getAttribute("data-ar") || en;
+      el.textContent = currentLang === "ar" ? ar : en;
+    });
+  };
+
+  // Load vendors on start
+  loadVendors();
+</script>
+</body>
+</html>
