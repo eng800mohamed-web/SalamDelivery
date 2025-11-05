@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>Salam Delivery | My Orders</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Poppins',sans-serif;background:#f5f5f5;color:#000;}
+    header{
+      background:#000;color:#FFD600;
+      padding:10px 16px;
+      display:flex;justify-content:space-between;align-items:center;
+    }
+    header .title{font-weight:600;}
+    header nav a{
+      color:#FFD600;margin-left:10px;font-size:13px;text-decoration:none;
+      padding:4px 8px;border-radius:999px;border:1px solid #FFD600;
+    }
+    header nav a.active{background:#FFD600;color:#000;}
+    main{padding:15px;}
+    h1{font-size:20px;margin-bottom:12px;}
+    .card{
+      background:#fff;border-radius:10px;padding:12px 14px;
+      margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,0.15);
+    }
+    .card h3{font-size:15px;margin-bottom:4px;}
+    .card p{font-size:13px;margin:2px 0;}
+    .badge{
+      display:inline-block;margin-top:6px;
+      padding:3px 8px;border-radius:999px;font-size:11px;
+    }
+    .pending{background:#FFD600;color:#000;}
+    .transit{background:#000;color:#FFD600;}
+    .delivered{background:#c8e6c9;color:#1b5e20;}
+    .btn{
+      margin-top:8px;padding:7px 10px;border-radius:8px;
+      border:none;background:#FFD600;color:#000;font-weight:600;
+      cursor:pointer;font-size:12px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="title">Salam Driver – My Orders</div>
+  <nav>
+    <a href="available.html">Available</a>
+    <a href="myorders.html" class="active">My Orders</a>
+    <a href="#" onclick="logout();return false;">Logout</a>
+  </nav>
+</header>
+
+<main>
+  <h1>My Orders</h1>
+  <div id="list"></div>
+</main>
+
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+  const supabaseUrl = "https://nfmaqndlsbizkafzhigd.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mbWFxbmRsc2JpemthZnpoaWdkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMzU5NjUsImV4cCI6MjA3NzkxMTk2NX0.ILsyiRbVNlOjwFV3f4Yt5-RROBA2gwQ0J-oMPFlRRDc";
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  function badgeClass(status){
+    if(status==="Pending" || status==="Preparing") return "badge pending";
+    if(status==="In Transit") return "badge transit";
+    if(status==="Delivered") return "badge delivered";
+    return "badge";
+  }
+
+  async function getCurrentUser(){
+    const { data, error } = await supabase.auth.getUser();
+    if(error || !data.user){
+      window.location.href = "login.html";
+      return null;
+    }
+    return data.user;
+  }
+
+  async function loadMyOrders(){
+    const user = await getCurrentUser();
+    if(!user) return;
+    const container = document.getElementById("list");
+    container.innerHTML = "Loading…";
+
+    const { data, error } = await supabase
+      .from("orders")
+      .select("*")
+      .eq("driver_id", user.id)
+      .order("created_at",{ascending:false});
+
+    if(error){
+      console.error(error);
+      container.innerHTML = "Error loading orders.";
+      return;
+    }
+    if(!data.length){
+      container.innerHTML = "No orders yet.";
+      return;
+    }
+
+    container.innerHTML = "";
+    data.forEach(order=>{
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `
+        <h3>${order.vendor_name || "Vendor"}</h3>
+        <p><strong>Pickup:</strong> ${order.pickup_address || "-"}</p>
+        <p><strong>Dropoff:</strong> ${order.dropoff_address || "-"}</p>
+        <p><strong>Amount:</strong> AED ${(order.total_price||0).toFixed(2)}</p>
+        <span class="${badgeClass(order.status)}">${order.status}</span>
+        ${order.status !== "Delivered" ? '<br><button class="btn" onclick="markDelivered(\''+order.id+'\')">Mark as Delivered</button>' : ''}
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  window.markDelivered = async function(id){
+    const { error } = await supabase
+      .from("orders")
+      .update({ status: "Delivered" })
+      .eq("id", id);
+    if(error){
+      alert("Failed to update: " + error.message);
+    }else{
+      alert("Order marked as delivered");
+      loadMyOrders();
+    }
+  };
+
+  window.logout = async function(){
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  };
+
+  loadMyOrders();
+</script>
+</body>
+</html>
